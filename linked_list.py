@@ -82,20 +82,11 @@ class LinkedList:
                 current_node.next = removed_node.next
                 return removed_node.data
         return None
-
-# Implementation
-ll = LinkedList()
-
-ll.display() # Expected Output: None
-ll.insert_at_beginning(4)
-ll.insert_at_beginning(3)
-ll.insert_at_beginning(2)
-ll.insert_at_beginning(1)
-ll.insert_at_end(5)
-ll.display() # Expected Output: 1 -> 2 -> 3 -> 4 -> 5 -> None
-print(ll.remove_at_end(), "has been removed from the list.") 
-ll.display() # Expected Output: 1 -> 2 -> 3 -> 4 -> None
-print(ll.remove_at_beginning(), "has been removed from the list")
-ll.display() # Expected Output: 2 -> 3 -> 4 -> None
-print(ll.remove_at(3), "has been removed from the list")
-ll.display() # Expected Output: 2 -> 4 -> None 
+    
+    def use_list(self):
+        current = self.head
+        listed = []
+        while current:
+            listed.append(current.data)
+            current = current.next
+        return listed
