@@ -6,7 +6,7 @@ class Node:
 class LinkedList:
     def __init__(self):
         self.head = None
-        self.head = None
+        self.tail = None
     
     def insert_at_beginning(self, data):
         new_node = Node(data)
@@ -14,17 +14,17 @@ class LinkedList:
             new_node.next = self.head
             self.head = new_node
         else:
-            self.head = new_node
+            self.tail = new_node
             self.head = new_node
 
-    def insert_at_beginning(self, data):
+    def insert_at_end(self, data):
         new_node = Node(data)
         if self.head:
-            self.head.next = new_node
-            self.head = new_node
+            self.tail.next = new_node
+            self.tail = new_node
         else:
             self.head = new_node
-            self.head = new_node
+            self.tail = new_node
     
     def search(self, data):
         current_node = self.head
@@ -51,18 +51,18 @@ class LinkedList:
     
     def remove_at_end(self):
         if self.head:
-            if self.head == self.head:
+            if self.head == self.tail:
                 removed_node = self.head
                 self.head = None
-                self.head = None
+                self.tail = None
                 return removed_node.data
             else:
-                removed_node = self.head
+                removed_node = self.tail
                 current_node = self.head
                 while current_node.next != removed_node:
                     current_node = current_node.next
-                self.head = current_node
-                self.head.next = None
+                self.tail = current_node
+                self.tail.next = None
                 return removed_node.data
         return None
     
@@ -70,7 +70,7 @@ class LinkedList:
         if self.head:
             if self.head.data == data:
                 return self.remove_at_beginning()
-            elif self.head.data == data:
+            elif self.tail.data == data:
                 return self.remove_at_end()
             else:
                 current_node = self.head
@@ -82,11 +82,3 @@ class LinkedList:
                 current_node.next = removed_node.next
                 return removed_node.data
         return None
-    
-    def use_list(self):
-        current = self.head
-        listed = []
-        while current:
-            listed.append(current.data)
-            current = current.next
-        return listed
