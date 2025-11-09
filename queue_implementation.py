@@ -1,44 +1,77 @@
 from queue_self_made import Queue
-import random
 
-line = Queue()
-customer_state = {
-    "Alex": "Regular",
-    "Bethany": "Pregnant",
-    "Carly": "Senior",
-    "Dennis": "Regular",
-    "Ezekiel": "Regular",
-    "Francine": "Regular",
-    "Gregorio": "Senior"
-}
+class CustomerQueue:
+    def __init__(self):
+        self.line = Queue()
+        self.customer_state = {}
 
-customer_set = set()
-priority = []
-while len(customer_set) < len(customer_state):
-    customer = random.choice(list(customer_state.keys()))
-    if customer in customer_set:
-        continue
-    customer_set.add(customer)
-    state = customer_state[customer]
-    current_head = line.head
-    if state != "Regular":
-        if line.head and customer_state[line.head.data] != "Regular":
-            while customer_state[current_head.data] != "Regular":
-                priority.append(current_head.data)
-                current_head = current_head.next 
+    def enqueue_after(self, node, data): # New function for priority queue, seperated from queue because specific only to this implementation
+        from node import Node
+        new_node = Node(data)
+        new_node.next = node.next
+        node.next = new_node
+        if new_node.next is None:
+            self.tail = new_node
+
+    def add_customer(self, name, state):
+        self.customer_state[name] = state
+        if state != "Regular":
+            if not self.line.head or self.customer_state[self.line.head.data] == "Regular":
+                self.line.enqueue_at_head(name)
+            else:
+                current = self.line.head
+                while current.next and self.customer_state[current.next.data] != "Regular":
+                    current = current.next
+                self.enqueue_after(current, name)
         else:
-            priority.append(customer)    
-    else:
-        line.enqueue(customer)
+            self.line.enqueue(name)
 
-    print(customer)
+    def get_line(self):
+        current = self.line.head
+        result = []
+        while current:
+            result.append(current.data)
+            current = current.next
+        return result
 
-priority.reverse()
-for prio in priority:
-    line.enqueue_at_head(prio)
-
-current = line.head
-while current:
-    print(current.data, end=" -> ")
-    current = current.next
+    def serve_customer(self):
+        returned_node = self.line.dequeue()
+        if returned_node:
+            self.customer_state.pop(returned_node.data, None)
+            return returned_node.data
+        return None
     
+the_line = CustomerQueue()
+while True:
+    the_queue = the_line.get_line()
+    if the_queue:
+        print(the_queue)
+    else:
+        print("No one in line.")
+    name = input("Please input name (or 'exit' to stop): ")
+    if name.lower() == "exit":
+        break
+
+    state = input("Input customer State: ")
+    if state.lower() != "regular":
+        state = "Not Regular"
+    else:
+        state = "Regular"
+
+    the_line.add_customer(name, state)
+
+    the_queue = the_line.get_line()
+    if the_queue:
+        print(the_queue)
+    else:
+        print("No one in line.")
+
+    serve = input("DO you wanna serve the next customer? (Y/N): ")
+    while serve == "y":
+        served = the_line.serve_customer()
+        if served:
+            print(f"Served customer: {served}")
+        else:
+            print("No customers in line.")
+        print(the_line.get_line())
+        serve = input("DO you wanna serve the next customer? (Y/N): ")
